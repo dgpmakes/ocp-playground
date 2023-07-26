@@ -2,8 +2,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: add-user-to-system
-  namespace: ${PIPELINES_PROJECT}
-spec:
+  namespace: pipelines-test
   params:
     - name: user
       description: User to be added.
