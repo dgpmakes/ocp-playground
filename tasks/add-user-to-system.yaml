@@ -16,7 +16,7 @@ metadata:
     - name: adding-user
       # image: registry.access.redhat.com/ubi8/ubi
       image: quay.io/dgarciap/openshift-pipelines:latest
-      script: |
+      script: | 
         #!/bin/sh
         echo "Starting task."
         oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 --decode > users.htpasswd
