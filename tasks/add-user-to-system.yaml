@@ -1,35 +1,25 @@
----
-apiVersion: template.openshift.io/v1
-kind: Template
-objects:
-  - apiVersion: tekton.dev/v1
-    kind: Task
-    metadata:
-      name: add-user-to-system
-      namespace: ${PIPELINES_PROJECT}
-    spec:
-      params:
-        - name: user
-          description: User to be added.
-          type: string
-          default: user10
-        - name: password
-          description: Password of the user.
-          type: string
-          default: password
-      steps:
-        - name: adding-user
-          # image: registry.access.redhat.com/ubi8/ubi
-          image: quay.io/dgarciap/openshift-pipelines:latest
-          script: |
-            #!/bin/sh
-            echo "Starting task."
-            oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 --decode > users.htpasswd
-            htpasswd -bB users.htpasswd $(params.user) $(params.password)
-            oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f -
-
-parameters:
-  - name: PIPELINES_PROJECT
-    description: "The project where the Pipelines will be deployed."
-    required: false
-    value: pipelines-test
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: add-user-to-system
+  namespace: ${PIPELINES_PROJECT}
+spec:
+  params:
+    - name: user
+      description: User to be added.
+      type: string
+      default: user10
+    - name: password
+      description: Password of the user.
+      type: string
+      default: password
+  steps:
+    - name: adding-user
+      # image: registry.access.redhat.com/ubi8/ubi
+      image: quay.io/dgarciap/openshift-pipelines:latest
+      script: |
+        #!/bin/sh
+        echo "Starting task."
+        oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 --decode > users.htpasswd
+        htpasswd -bB users.htpasswd $(params.user) $(params.password)
+        oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f -
