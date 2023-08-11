@@ -3,6 +3,7 @@ kind: Task
 metadata:
   name: add-user-to-system
   namespace: pipelines-test
+spec:
   params:
     - name: user
       description: User to be added.
